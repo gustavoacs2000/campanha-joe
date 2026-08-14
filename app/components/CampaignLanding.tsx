@@ -6,7 +6,7 @@ import { FormEvent, useState } from 'react';
 const INSTAGRAM_URL = 'https://www.instagram.com/joevalleoficial/';
 const TIKTOK_URL = 'https://www.tiktok.com/@joe.valle.malunga?_r=1&_t=ZS-98rMjdKcK5S';
 const WHATSAPP_URL = process.env.NEXT_PUBLIC_WHATSAPP_COMMUNITY_URL || '';
-const JOE_IMAGE_URL = 'https://raw.githubusercontent.com/gustavoacs2000/joe-valle/769a080974d0b7932b93028ac41c518b8f20ce4d/public/joe-valle.jpg';
+const JOE_IMAGE_URL = '/joe-valle-aprovado.webp';
 
 function InstagramIcon() {
   return (
