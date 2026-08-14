@@ -5,7 +5,7 @@ import { CSSProperties, KeyboardEvent, useEffect, useRef, useState } from 'react
 type Message = { role: 'user' | 'assistant'; content: string };
 type FalaJoeWidgetProps = { embedded?: boolean };
 
-const WELCOME = 'Olá! Sou o FalaJoe, assistente virtual da campanha de Joe Valle. Como posso ajudar?';
+const WELCOME = 'Olá! Sou o Fala Joe, assistente virtual da campanha de Joe Valle. Como posso ajudar?';
 
 function BotIcon() {
   return (
@@ -56,7 +56,7 @@ export default function FalaJoeWidget({ embedded = false }: FalaJoeWidgetProps) 
         body: JSON.stringify({ messages: history }),
       });
 
-      if (!response.ok || !response.body) throw new Error('Falha ao consultar o FalaJoe');
+      if (!response.ok || !response.body) throw new Error('Falha ao consultar o Fala Joe');
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -144,13 +144,13 @@ export default function FalaJoeWidget({ embedded = false }: FalaJoeWidgetProps) 
         <section
           className="falajoe-panel"
           style={embeddedPanelStyle}
-          aria-label="FalaJoe, assistente virtual com inteligência artificial"
+          aria-label="Fala Joe, assistente virtual com inteligência artificial"
         >
           <header className="falajoe-header">
             <div className="falajoe-header-brand">
               <span className="falajoe-avatar"><BotIcon /></span>
               <div>
-                <strong>FalaJoe</strong>
+                <strong>Fala Joe</strong>
                 <span>Assistente virtual com IA</span>
               </div>
             </div>
@@ -172,7 +172,7 @@ export default function FalaJoeWidget({ embedded = false }: FalaJoeWidgetProps) 
             {waitingFirstToken && (
               <div className="falajoe-row assistant">
                 <span className="falajoe-message-avatar"><BotIcon /></span>
-                <div className="falajoe-bubble falajoe-typing" aria-label="FalaJoe está escrevendo"><i /><i /><i /></div>
+                <div className="falajoe-bubble falajoe-typing" aria-label="Fala Joe está escrevendo"><i /><i /><i /></div>
               </div>
             )}
             <div ref={bottomRef} />
@@ -185,7 +185,7 @@ export default function FalaJoeWidget({ embedded = false }: FalaJoeWidgetProps) 
               onKeyDown={handleKeyDown}
               disabled={loading}
               placeholder="Digite sua mensagem..."
-              aria-label="Mensagem para o FalaJoe"
+              aria-label="Mensagem para o Fala Joe"
             />
             <button type="button" onClick={() => void sendMessage()} disabled={loading || !input.trim()} aria-label="Enviar mensagem">
               <SendIcon />
@@ -200,10 +200,10 @@ export default function FalaJoeWidget({ embedded = false }: FalaJoeWidgetProps) 
         style={embeddedLauncherStyle}
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
-        aria-label={open ? 'Fechar FalaJoe' : 'Conversar com o FalaJoe'}
+        aria-label={open ? 'Fechar Fala Joe' : 'Conversar com o Fala Joe'}
       >
         <span className="falajoe-launcher-icon"><BotIcon /></span>
-        <span className="falajoe-launcher-copy"><strong>Fala com o Joe</strong><small>Assistente com IA</small></span>
+        <span className="falajoe-launcher-copy"><strong>Fala Joe</strong><small>Assistente com IA</small></span>
       </button>
     </div>
   );
