@@ -241,6 +241,7 @@ export default function CampaignLanding() {
           <div className="desktop-copy"><CampaignCopy /></div>
         </div>
         <SignupForm />
+        <FalaJoeWidget />
       </section>
 
       <section className="mobile-layout">
@@ -256,12 +257,11 @@ export default function CampaignLanding() {
           </h1>
         </div>
         <SignupForm />
+        <FalaJoeWidget embedded />
         <div className="mobile-socials" aria-label="Redes sociais do Joe Valle">
           <SocialLinks />
         </div>
       </section>
-
-      <FalaJoeWidget />
     </main>
   );
 }
