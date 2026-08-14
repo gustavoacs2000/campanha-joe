@@ -1,0 +1,234 @@
+'use client';
+
+import Link from 'next/link';
+import { FormEvent, useState } from 'react';
+
+const INSTAGRAM_URL = 'https://www.instagram.com/joevalleoficial/';
+const TIKTOK_URL = 'https://www.tiktok.com/@joe.valle.malunga?_r=1&_t=ZS-98rMjdKcK5S';
+const WHATSAPP_URL = process.env.NEXT_PUBLIC_WHATSAPP_COMMUNITY_URL || '';
+const JOE_IMAGE_URL = 'https://raw.githubusercontent.com/gustavoacs2000/joe-valle/769a080974d0b7932b93028ac41c518b8f20ce4d/public/joe-valle.jpg';
+
+function InstagramIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4.25" />
+      <circle cx="17.35" cy="6.65" r="1" className="fill-current stroke-none" />
+    </svg>
+  );
+}
+
+function WhatsAppIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M20.5 11.7a8.5 8.5 0 0 1-12.7 7.4L3.2 20.4l1.4-4.4A8.5 8.5 0 1 1 20.5 11.7Z" />
+      <path d="M8.3 7.5c.3-.6.5-.6.9-.6h.5c.2 0 .4.1.6.5l.8 2c.1.3.1.5-.1.8l-.7.9c-.2.2-.2.4 0 .7.5.9 1.2 1.7 2.1 2.3.8.6 1.6 1 2.4 1.3.3.1.5.1.7-.2l1-1.2c.2-.3.5-.3.8-.2l2 .9c.3.2.5.3.5.5 0 .2 0 1-.5 1.9-.5.9-1.9 1.7-3 1.8-1 .1-2.3.2-4.8-.9-3.9-1.7-6.4-5.8-6.6-6.1-.2-.3-1.6-2.2-1.6-4.2 0-2 .9-3 1.3-3.5Z" />
+    </svg>
+  );
+}
+
+function TikTokIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M14.4 3v10.3a4.4 4.4 0 1 1-3.7-4.3v3a1.6 1.6 0 1 0 .9 1.4V3h2.8Zm0 0c.3 2.2 1.7 3.8 4.2 4.3v2.8a8.6 8.6 0 0 1-4.2-1.5" />
+    </svg>
+  );
+}
+
+function SocialLinks() {
+  return (
+    <div className="social-links" aria-label="Redes sociais do Joe Valle">
+      <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" aria-label="Instagram do Joe Valle">
+        <InstagramIcon />
+      </a>
+      {WHATSAPP_URL ? (
+        <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" aria-label="Comunidade do Joe Valle no WhatsApp">
+          <WhatsAppIcon />
+        </a>
+      ) : (
+        <span className="social-placeholder" aria-label="WhatsApp">
+          <WhatsAppIcon />
+        </span>
+      )}
+      <a href={TIKTOK_URL} target="_blank" rel="noreferrer" aria-label="TikTok do Joe Valle">
+        <TikTokIcon />
+      </a>
+    </div>
+  );
+}
+
+function CampaignCopy() {
+  return (
+    <>
+      <h1 className="campaign-title">
+        <span>Chegou a hora</span>
+        <strong>de voltarmos</strong>
+        <strong>a caminhar</strong>
+        <em>juntos.</em>
+      </h1>
+      <p className="campaign-copy">
+        As redes sociais podem e vão fazer a diferença nesta nossa caminhada coletiva. Participe e siga as nossas
+        orientações. Juntos vamos lutar pelo cerrado, pela sustentabilidade, pela ética na política e pela energia
+        limpa. Vamos cuidar desta cidade juntos.
+      </p>
+      <SocialLinks />
+    </>
+  );
+}
+
+function SignupForm() {
+  const [sending, setSending] = useState(false);
+  const [done, setDone] = useState(false);
+  const [error, setError] = useState('');
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const name = String(data.get('name') || '').trim();
+    const phone = String(data.get('phone') || '').replace(/\D/g, '');
+    const accepted = data.get('consent') === 'on';
+
+    if (name.length < 2) {
+      setError('Informe seu nome.');
+      return;
+    }
+    if (phone.length < 10 || phone.length > 13) {
+      setError('Informe um telefone válido com DDD.');
+      return;
+    }
+    if (!accepted) {
+      setError('Você precisa aceitar o termo de contato para continuar.');
+      return;
+    }
+
+    setSending(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, consent: true }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result?.success === false) {
+        throw new Error(result?.message || 'Não foi possível concluir o cadastro.');
+      }
+      setDone(true);
+      form.reset();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Falha de conexão. Tente novamente.');
+    } finally {
+      setSending(false);
+    }
+  }
+
+  return (
+    <section className="form-card" aria-labelledby="form-title">
+      <div className="form-heading">
+        <div className="form-logo-text" aria-label="Volta Joe"><span>Volta</span><strong>Joe</strong></div>
+        <h2 id="form-title">
+          Participe desse <span>novo começo!</span>
+        </h2>
+      </div>
+      <p className="form-intro">Deixe seus dados e receba todas as novidades do nosso movimento.</p>
+
+      {done ? (
+        <div className="success" role="status">
+          <strong>Cadastro realizado.</strong>
+          <span>Obrigado por participar desse novo começo.</span>
+          {WHATSAPP_URL && (
+            <a className="whatsapp-button" href={WHATSAPP_URL} target="_blank" rel="noreferrer">
+              <WhatsAppIcon /> Entrar na comunidade do WhatsApp
+            </a>
+          )}
+        </div>
+      ) : (
+        <form onSubmit={submit} className="signup-form">
+          <label>
+            <span>Nome</span>
+            <input type="text" name="name" autoComplete="name" placeholder="Digite seu nome completo" required />
+          </label>
+          <label>
+            <span>Telefone</span>
+            <input
+              type="tel"
+              name="phone"
+              autoComplete="tel"
+              inputMode="tel"
+              placeholder="(00) 00000-0000"
+              required
+            />
+          </label>
+          <label className="consent-row">
+            <input type="checkbox" name="consent" required />
+            <span>
+              Autorizo o uso dos meus dados para contato sobre o movimento e outras comunicações relacionadas, nos
+              termos da LGPD. Li e aceito o <Link href="/termos">termo de aceite</Link>.
+            </span>
+          </label>
+          {error && <p className="form-error">{error}</p>}
+          <button className="submit-button" type="submit" disabled={sending}>
+            <span className="send-icon" aria-hidden="true">➤</span>
+            {sending ? 'Enviando...' : 'Quero me inscrever'}
+          </button>
+        </form>
+      )}
+
+      {!done && (
+        <a
+          className={`whatsapp-button ${WHATSAPP_URL ? '' : 'is-disabled'}`}
+          href={WHATSAPP_URL || undefined}
+          target={WHATSAPP_URL ? '_blank' : undefined}
+          rel={WHATSAPP_URL ? 'noreferrer' : undefined}
+          aria-disabled={!WHATSAPP_URL}
+          onClick={(event) => {
+            if (!WHATSAPP_URL) event.preventDefault();
+          }}
+        >
+          <WhatsAppIcon /> Quero entrar na comunidade do WhatsApp
+        </a>
+      )}
+
+      <p className="privacy-note">🔒 Seus dados estão protegidos. Não compartilhamos suas informações.</p>
+    </section>
+  );
+}
+
+export default function CampaignLanding() {
+  return (
+    <main className="campaign-page">
+      <section className="desktop-layout">
+        <div className="desktop-left">
+          <div className="brand-wordmark">Joe<br />Valle</div>
+          <div className="portrait-wrap">
+            <img src={JOE_IMAGE_URL} alt="Joe Valle" className="portrait-image" />
+          </div>
+          <div className="desktop-copy"><CampaignCopy /></div>
+          <div className="community-strip">Nossa cidade mais forte se faz com a nossa gente.</div>
+        </div>
+        <SignupForm />
+      </section>
+
+      <section className="mobile-layout">
+        <div className="mobile-hero">
+          <div className="mobile-joe-mark">Volta<br /><strong>Joe</strong></div>
+          <div className="mobile-portrait">
+            <img src={JOE_IMAGE_URL} alt="Joe Valle" className="portrait-image" />
+          </div>
+        </div>
+        <div className="mobile-copy"><CampaignCopy /></div>
+        <SignupForm />
+        <div className="mobile-social-copy">
+          <p>
+            As redes sociais podem e vão fazer a diferença nesta nossa caminhada coletiva. Participe e siga as nossas
+            orientações. Juntos vamos lutar pelo cerrado, pela sustentabilidade, pela ética na política e pela energia
+            limpa. Vamos cuidar desta cidade juntos.
+          </p>
+          <SocialLinks />
+        </div>
+      </section>
+    </main>
+  );
+}
