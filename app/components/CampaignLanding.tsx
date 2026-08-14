@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ChangeEvent, FormEvent, useState } from 'react';
+import FalaJoeWidget from './FalaJoeWidget';
 
 const INSTAGRAM_URL = 'https://www.instagram.com/joevalleoficial/';
 const TIKTOK_URL = 'https://www.tiktok.com/@joe.valle.malunga?_r=1&_t=ZS-98rMjdKcK5S';
@@ -259,6 +260,8 @@ export default function CampaignLanding() {
           <SocialLinks />
         </div>
       </section>
+
+      <FalaJoeWidget />
     </main>
   );
 }
