@@ -1,8 +1,9 @@
 'use client';
 
-import { KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { CSSProperties, KeyboardEvent, useEffect, useRef, useState } from 'react';
 
 type Message = { role: 'user' | 'assistant'; content: string };
+type FalaJoeWidgetProps = { embedded?: boolean };
 
 const WELCOME = 'Olá! Sou o FalaJoe, assistente virtual da campanha de Joe Valle. Como posso ajudar?';
 
@@ -27,7 +28,7 @@ function SendIcon() {
   );
 }
 
-export default function FalaJoeWidget() {
+export default function FalaJoeWidget({ embedded = false }: FalaJoeWidgetProps) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([{ role: 'assistant', content: WELCOME }]);
   const [input, setInput] = useState('');
@@ -108,11 +109,43 @@ export default function FalaJoeWidget() {
   }
 
   const waitingFirstToken = loading && messages[messages.length - 1]?.content === '';
+  const embeddedWidgetStyle: CSSProperties | undefined = embedded
+    ? {
+        position: 'static',
+        right: 'auto',
+        bottom: 'auto',
+        zIndex: 'auto',
+        width: 'calc(100% - 24px)',
+        maxWidth: 760,
+        margin: '16px auto 0',
+        justifyItems: 'stretch',
+      }
+    : undefined;
+  const embeddedPanelStyle: CSSProperties | undefined = embedded
+    ? {
+        width: '100%',
+        height: 'min(520px, 68vh)',
+        minHeight: 380,
+        boxShadow: '0 16px 42px rgba(86,48,16,.12)',
+      }
+    : undefined;
+  const embeddedLauncherStyle: CSSProperties | undefined = embedded
+    ? {
+        width: '100%',
+        justifyContent: 'center',
+        borderRadius: 16,
+        minHeight: 62,
+      }
+    : undefined;
 
   return (
-    <div className={`falajoe-widget ${open ? 'is-open' : ''}`}>
+    <div className={`falajoe-widget ${open ? 'is-open' : ''}`} style={embeddedWidgetStyle}>
       {open && (
-        <section className="falajoe-panel" aria-label="FalaJoe, assistente virtual com inteligência artificial">
+        <section
+          className="falajoe-panel"
+          style={embeddedPanelStyle}
+          aria-label="FalaJoe, assistente virtual com inteligência artificial"
+        >
           <header className="falajoe-header">
             <div className="falajoe-header-brand">
               <span className="falajoe-avatar"><BotIcon /></span>
@@ -164,6 +197,7 @@ export default function FalaJoeWidget() {
       <button
         type="button"
         className="falajoe-launcher"
+        style={embeddedLauncherStyle}
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-label={open ? 'Fechar FalaJoe' : 'Conversar com o FalaJoe'}
