@@ -148,10 +148,14 @@ function SignupForm() {
 
       {done ? (
         <div className="success" role="status" aria-live="polite">
-          <div className="success-icon" aria-hidden="true">
-            <svg viewBox="0 0 52 52">
-              <circle cx="26" cy="26" r="24" />
-              <path d="M15 27l7 7 15-16" />
+          <div aria-hidden="true" style={{ width: 68, height: 68, marginBottom: 6 }}>
+            <svg viewBox="0 0 52 52" width="68" height="68" fill="none">
+              <circle cx="26" cy="26" r="24" stroke="#0a9c43" strokeWidth="3" strokeDasharray="151" strokeDashoffset="151">
+                <animate attributeName="stroke-dashoffset" from="151" to="0" dur="0.45s" fill="freeze" />
+              </circle>
+              <path d="M15 27l7 7 15-16" stroke="#0a9c43" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="40" strokeDashoffset="40">
+                <animate attributeName="stroke-dashoffset" from="40" to="0" dur="0.3s" begin="0.35s" fill="freeze" />
+              </path>
             </svg>
           </div>
           <strong>Cadastro realizado!</strong>
