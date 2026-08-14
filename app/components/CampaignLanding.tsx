@@ -1,12 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import { FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 
 const INSTAGRAM_URL = 'https://www.instagram.com/joevalleoficial/';
 const TIKTOK_URL = 'https://www.tiktok.com/@joe.valle.malunga?_r=1&_t=ZS-98rMjdKcK5S';
 const WHATSAPP_URL = process.env.NEXT_PUBLIC_WHATSAPP_COMMUNITY_URL || '';
 const JOE_IMAGE_URL = '/joe-valle-aprovado.webp';
+
+function formatPhone(value: string) {
+  const digits = value.replace(/\D/g, '').slice(0, 11);
+
+  if (digits.length <= 2) return digits ? `(${digits}` : '';
+  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+}
 
 function InstagramIcon() {
   return (
@@ -75,20 +85,26 @@ function SignupForm() {
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState('');
+  const [phone, setPhone] = useState('');
+
+  function handlePhoneChange(event: ChangeEvent<HTMLInputElement>) {
+    setPhone(formatPhone(event.target.value));
+    if (error) setError('');
+  }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
     const name = String(data.get('name') || '').trim();
-    const phone = String(data.get('phone') || '').replace(/\D/g, '');
+    const phoneDigits = String(data.get('phone') || '').replace(/\D/g, '');
     const accepted = data.get('consent') === 'on';
 
     if (name.length < 2) {
       setError('Informe seu nome.');
       return;
     }
-    if (phone.length < 10 || phone.length > 13) {
+    if (phoneDigits.length < 10 || phoneDigits.length > 11) {
       setError('Informe um telefone válido com DDD.');
       return;
     }
@@ -104,13 +120,14 @@ function SignupForm() {
       const response = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, phone, consent: true }),
+        body: JSON.stringify({ name, phone: phoneDigits, consent: true }),
       });
       const result = await response.json().catch(() => ({}));
       if (!response.ok || result?.success === false) {
         throw new Error(result?.message || 'Não foi possível concluir o cadastro.');
       }
       setDone(true);
+      setPhone('');
       form.reset();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Falha de conexão. Tente novamente.');
@@ -130,8 +147,14 @@ function SignupForm() {
       <p className="form-intro">Deixe seus dados e receba todas as novidades do nosso movimento.</p>
 
       {done ? (
-        <div className="success" role="status">
-          <strong>Cadastro realizado.</strong>
+        <div className="success" role="status" aria-live="polite">
+          <div className="success-icon" aria-hidden="true">
+            <svg viewBox="0 0 52 52">
+              <circle cx="26" cy="26" r="24" />
+              <path d="M15 27l7 7 15-16" />
+            </svg>
+          </div>
+          <strong>Cadastro realizado!</strong>
           <span>Obrigado por participar desse novo começo.</span>
           {WHATSAPP_URL && (
             <a className="whatsapp-button" href={WHATSAPP_URL} target="_blank" rel="noreferrer">
@@ -147,7 +170,17 @@ function SignupForm() {
           </label>
           <label>
             <span>Telefone</span>
-            <input type="tel" name="phone" autoComplete="tel" inputMode="tel" placeholder="(00) 00000-0000" required />
+            <input
+              type="tel"
+              name="phone"
+              autoComplete="tel"
+              inputMode="numeric"
+              placeholder="(00) 00000-0000"
+              value={phone}
+              onChange={handlePhoneChange}
+              maxLength={15}
+              required
+            />
           </label>
           <label className="consent-row">
             <input type="checkbox" name="consent" required />
@@ -156,7 +189,7 @@ function SignupForm() {
               termos da LGPD. Li e aceito o <Link href="/termos">termo de aceite</Link>.
             </span>
           </label>
-          {error && <p className="form-error">{error}</p>}
+          {error && <p className="form-error" role="alert" aria-live="assertive">{error}</p>}
           <button className="submit-button" type="submit" disabled={sending}>
             <span className="send-icon" aria-hidden="true">➤</span>
             {sending ? 'Enviando...' : 'Quero me inscrever'}
