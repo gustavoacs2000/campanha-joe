@@ -19,7 +19,7 @@ function InstagramIcon() {
 }
 
 function WhatsAppIcon() {
-  return <img src="/whatsapp-logo.png" alt="" aria-hidden="true" className="whatsapp-logo-image" />;
+  return <img src="/whatsapp-logo.png" width="34" height="34" alt="" aria-hidden="true" className="whatsapp-logo-image" />;
 }
 
 function TikTokIcon() {
