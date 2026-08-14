@@ -19,11 +19,7 @@ function InstagramIcon() {
 }
 
 function WhatsAppIcon() {
-  return (
-    <svg className="whatsapp-mark" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12.04 2C6.52 2 2.04 6.48 2.04 12c0 1.76.46 3.48 1.33 5L2 22l5.12-1.34A9.96 9.96 0 0 0 12.04 22C17.56 22 22 17.52 22 12S17.56 2 12.04 2Zm0 18.18c-1.55 0-3.06-.42-4.38-1.22l-.31-.18-3.04.8.81-2.96-.2-.32a8.15 8.15 0 1 1 7.12 3.88Zm4.47-6.09c-.24-.12-1.45-.72-1.68-.8-.23-.08-.4-.12-.57.12-.17.24-.65.8-.8.97-.15.17-.29.19-.53.06-.24-.12-1.03-.38-1.96-1.2-.72-.64-1.45-1.44-1.7-.24-.24-.03-.37.09-.49.11-.11.24-.29.37-.43.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.43-.06-.12-.57-1.38-.78-1.89-.21-.5-.42-.43-.57-.44h-.49c-.17 0-.43.06-.66.3-.23.24-.87.85-.87 2.08 0 1.22.89 2.4 1.01 2.56.12.16 1.75 2.67 4.24 3.74.59.26 1.06.41 1.42.52.6.19 1.14.16 1.57.1.48-.07 1.45-.59 1.65-1.16.2-.57.2-1.06.14-1.16-.06-.1-.22-.16-.46-.28Z" />
-    </svg>
-  );
+  return <img src="/whatsapp-logo.png" alt="" aria-hidden="true" className="whatsapp-logo-image" />;
 }
 
 function TikTokIcon() {
@@ -151,14 +147,7 @@ function SignupForm() {
           </label>
           <label>
             <span>Telefone</span>
-            <input
-              type="tel"
-              name="phone"
-              autoComplete="tel"
-              inputMode="tel"
-              placeholder="(00) 00000-0000"
-              required
-            />
+            <input type="tel" name="phone" autoComplete="tel" inputMode="tel" placeholder="(00) 00000-0000" required />
           </label>
           <label className="consent-row">
             <input type="checkbox" name="consent" required />
