@@ -98,7 +98,13 @@ button, input { font: inherit; }
   margin: 0 0 24px;
 }
 
-.social-links { display: flex; gap: 16px; }
+.social-links {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  width: 100%;
+  max-width: 570px;
+}
 .social-links a, .social-placeholder {
   width: 58px;
   height: 58px;
@@ -112,23 +118,12 @@ button, input { font: inherit; }
 }
 .social-links a:hover { transform: translateY(-2px); background: #fff; }
 .social-links svg { width: 34px; height: 34px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.social-placeholder { opacity: .7; }
-
-.community-strip {
-  position: absolute;
-  bottom: 0;
-  left: 43%;
-  right: 5%;
-  min-height: 88px;
-  padding: 28px 42px;
-  border-radius: 70px 70px 0 0;
-  background: linear-gradient(90deg, #ff7700, #ff9a00);
-  color: #fff;
-  font-family: Georgia, serif;
-  font-style: italic;
-  font-size: 18px;
-  text-align: center;
+.social-links .whatsapp-mark,
+.whatsapp-button .whatsapp-mark {
+  fill: currentColor;
+  stroke: none;
 }
+.social-placeholder { opacity: .7; }
 
 .form-card {
   position: relative;
@@ -193,7 +188,7 @@ button, input { font: inherit; }
   color: var(--green);
   background: #fff;
 }
-.whatsapp-button svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.whatsapp-button svg { width: 28px; height: 28px; }
 .whatsapp-button.is-disabled { opacity: .5; cursor: not-allowed; }
 .privacy-note { margin: 22px 0 0; font-size: 13px; color: #666; text-align: center; }
 .success { padding: 20px 0 0; display: grid; gap: 8px; font-size: 18px; }
@@ -253,7 +248,7 @@ button, input { font: inherit; }
   .submit-button, .whatsapp-button { font-size: 16px; min-height: 58px; padding: 10px 14px; }
   .mobile-social-copy { padding: 42px 24px 0; text-align: center; max-width: 760px; margin: 0 auto; }
   .mobile-social-copy p { font-size: 17px; line-height: 1.55; }
-  .mobile-social-copy .social-links { justify-content: center; margin-top: 24px; }
+  .mobile-social-copy .social-links { justify-content: center; margin: 24px auto 0; }
 }
 
 @media (max-width: 560px) {
