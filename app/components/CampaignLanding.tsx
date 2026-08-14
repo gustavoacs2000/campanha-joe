@@ -137,14 +137,23 @@ function SignupForm() {
   }
 
   return (
-    <section className="form-card" aria-labelledby="form-title">
-      <div className="form-heading">
+    <section className={`form-card ${done ? 'form-card-success' : ''}`} aria-labelledby="form-title">
+      <div className={`form-heading ${done ? 'form-heading-success' : ''}`}>
         <div className="form-logo-text" aria-label="Volta Joe"><span>Volta</span><strong>Joe</strong></div>
         <h2 id="form-title">
-          Participe desse <span>novo começo!</span>
+          {done ? (
+            <>Cadastro <span>realizado.</span></>
+          ) : (
+            <>Participe desse <span>novo começo!</span></>
+          )}
         </h2>
       </div>
-      <p className="form-intro">Deixe seus dados e receba todas as novidades do nosso movimento.</p>
+
+      {done ? (
+        <p className="success-intro">Obrigado por participar desse novo começo.</p>
+      ) : (
+        <p className="form-intro">Deixe seus dados e receba todas as novidades do nosso movimento.</p>
+      )}
 
       {done ? (
         <div className="success" role="status" aria-live="polite">
@@ -158,10 +167,8 @@ function SignupForm() {
               </path>
             </svg>
           </div>
-          <strong>Cadastro realizado!</strong>
-          <span>Obrigado por participar desse novo começo.</span>
           {WHATSAPP_URL && (
-            <a className="whatsapp-button" href={WHATSAPP_URL} target="_blank" rel="noreferrer">
+            <a className="whatsapp-button success-whatsapp-button" href={WHATSAPP_URL} target="_blank" rel="noreferrer">
               <WhatsAppIcon /> Entrar na comunidade do WhatsApp
             </a>
           )}
