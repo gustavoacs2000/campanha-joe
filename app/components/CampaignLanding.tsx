@@ -6,7 +6,7 @@ import FalaJoeWidget from './FalaJoeWidget';
 
 const INSTAGRAM_URL = 'https://www.instagram.com/joevalleoficial/';
 const TIKTOK_URL = 'https://www.tiktok.com/@joe.valle.malunga?_r=1&_t=ZS-98rMjdKcK5S';
-const WHATSAPP_URL = process.env.NEXT_PUBLIC_WHATSAPP_COMMUNITY_URL || '';
+const WHATSAPP_URL = 'https://chat.whatsapp.com/JCLYbLdB41yB67IOSalhCL';
 const JOE_IMAGE_URL = '/joe-valle-aprovado.webp';
 
 function formatPhone(value: string) {
