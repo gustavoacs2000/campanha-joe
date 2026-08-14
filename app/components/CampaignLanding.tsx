@@ -244,19 +244,18 @@ export default function CampaignLanding() {
 
       <section className="mobile-layout">
         <div className="mobile-hero">
-          <div className="mobile-joe-mark">Volta<br /><strong>Joe</strong></div>
           <div className="mobile-portrait">
             <img src={JOE_IMAGE_URL} alt="Joe Valle" className="portrait-image" />
           </div>
+          <h1 className="mobile-title">
+            <span>Chegou a hora</span>
+            <strong>de voltarmos</strong>
+            <strong>a caminhar</strong>
+            <em>juntos.</em>
+          </h1>
         </div>
-        <div className="mobile-copy"><CampaignCopy /></div>
         <SignupForm />
-        <div className="mobile-social-copy">
-          <p>
-            As redes sociais podem e vão fazer a diferença nesta nossa caminhada coletiva. Participe e siga as nossas
-            orientações. Juntos vamos lutar pelo cerrado, pela sustentabilidade, pela ética na política e pela energia
-            limpa. Vamos cuidar desta cidade juntos.
-          </p>
+        <div className="mobile-socials" aria-label="Redes sociais do Joe Valle">
           <SocialLinks />
         </div>
       </section>
