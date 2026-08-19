@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import './mobile-fix.css';
 
 export const metadata: Metadata = {
   title: 'Volta Joe | Participe desse novo começo',
