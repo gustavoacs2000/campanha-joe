@@ -11,12 +11,20 @@ const JOE_IMAGE_URL = '/joe-valle-aprovado.webp';
 
 function formatPhone(value: string) {
   const digits = value.replace(/\D/g, '').slice(0, 11);
-
   if (digits.length <= 2) return digits ? `(${digits}` : '';
   if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
   if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
-
   return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+}
+
+function CampaignLogo({ compact = false }: { compact?: boolean }) {
+  return (
+    <div className={`campaign-logo ${compact ? 'campaign-logo-compact' : ''}`} aria-label="Joe Valle, deputado distrital, 12345">
+      <div className="campaign-logo-name"><strong>JOE</strong><span>VALLE</span></div>
+      <div className="campaign-logo-office"><span>DEPUTADO</span><strong>DISTRITAL</strong></div>
+      <div className="campaign-logo-number">12345</div>
+    </div>
+  );
 }
 
 function InstagramIcon() {
@@ -29,10 +37,6 @@ function InstagramIcon() {
   );
 }
 
-function WhatsAppIcon() {
-  return <img src="/whatsapp-logo.png" width="34" height="34" alt="" aria-hidden="true" className="whatsapp-logo-image" />;
-}
-
 function TikTokIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -41,44 +45,29 @@ function TikTokIcon() {
   );
 }
 
-function SocialLinks() {
-  return (
-    <div className="social-links" aria-label="Redes sociais do Joe Valle">
-      <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" aria-label="Instagram do Joe Valle">
-        <InstagramIcon />
-      </a>
-      {WHATSAPP_URL ? (
-        <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" aria-label="Comunidade do Joe Valle no WhatsApp">
-          <WhatsAppIcon />
-        </a>
-      ) : (
-        <span className="social-placeholder" aria-label="WhatsApp">
-          <WhatsAppIcon />
-        </span>
-      )}
-      <a href={TIKTOK_URL} target="_blank" rel="noreferrer" aria-label="TikTok do Joe Valle">
-        <TikTokIcon />
-      </a>
-    </div>
-  );
+function WhatsAppIcon() {
+  return <img src="/whatsapp-logo.png" width="42" height="42" alt="" aria-hidden="true" />;
 }
 
-function CampaignCopy() {
+function SocialCards() {
   return (
-    <>
-      <h1 className="campaign-title">
-        <span>Chegou a hora</span>
-        <strong>de voltarmos</strong>
-        <strong>a caminhar</strong>
-        <em>juntos.</em>
-      </h1>
-      <p className="campaign-copy">
-        As redes sociais podem e vão fazer a diferença nesta nossa caminhada coletiva. Participe e siga as nossas
-        orientações. Juntos vamos lutar pelo cerrado, pela sustentabilidade, pela ética na política e pela energia
-        limpa. Vamos cuidar desta cidade juntos.
-      </p>
-      <SocialLinks />
-    </>
+    <div className="social-cards" aria-label="Redes sociais do Joe Valle">
+      <a className="social-card social-card-whatsapp" href={WHATSAPP_URL} target="_blank" rel="noreferrer">
+        <span className="social-card-icon"><WhatsAppIcon /></span>
+        <span className="social-card-copy"><small>Comunidade</small><strong>WhatsApp</strong><em>Entrar agora</em></span>
+        <span className="social-card-arrow" aria-hidden="true">›</span>
+      </a>
+      <a className="social-card" href={INSTAGRAM_URL} target="_blank" rel="noreferrer">
+        <span className="social-card-icon instagram-icon"><InstagramIcon /></span>
+        <span className="social-card-copy"><strong>Instagram</strong><small>Siga a campanha</small><em>@joevalleoficial</em></span>
+        <span className="social-card-arrow" aria-hidden="true">›</span>
+      </a>
+      <a className="social-card" href={TIKTOK_URL} target="_blank" rel="noreferrer">
+        <span className="social-card-icon tiktok-icon"><TikTokIcon /></span>
+        <span className="social-card-copy"><strong>TikTok</strong><small>Acompanhe os bastidores</small></span>
+        <span className="social-card-arrow" aria-hidden="true">›</span>
+      </a>
+    </div>
   );
 }
 
@@ -101,18 +90,9 @@ function SignupForm() {
     const phoneDigits = String(data.get('phone') || '').replace(/\D/g, '');
     const accepted = data.get('consent') === 'on';
 
-    if (name.length < 2) {
-      setError('Informe seu nome.');
-      return;
-    }
-    if (phoneDigits.length < 10 || phoneDigits.length > 11) {
-      setError('Informe um telefone válido com DDD.');
-      return;
-    }
-    if (!accepted) {
-      setError('Você precisa aceitar o termo de contato para continuar.');
-      return;
-    }
+    if (name.length < 2) return setError('Informe seu nome.');
+    if (phoneDigits.length < 10 || phoneDigits.length > 11) return setError('Informe um telefone válido com DDD.');
+    if (!accepted) return setError('Você precisa aceitar o termo de contato para continuar.');
 
     setSending(true);
     setError('');
@@ -124,9 +104,7 @@ function SignupForm() {
         body: JSON.stringify({ name, phone: phoneDigits, consent: true }),
       });
       const result = await response.json().catch(() => ({}));
-      if (!response.ok || result?.success === false) {
-        throw new Error(result?.message || 'Não foi possível concluir o cadastro.');
-      }
+      if (!response.ok || result?.success === false) throw new Error(result?.message || 'Não foi possível concluir o cadastro.');
       setDone(true);
       setPhone('');
       form.reset();
@@ -138,94 +116,57 @@ function SignupForm() {
   }
 
   return (
-    <section className={`form-card ${done ? 'form-card-success' : ''}`} aria-labelledby="form-title">
-      <div className={`form-heading ${done ? 'form-heading-success' : ''}`}>
-        <div className="form-logo-text" aria-label="Volta Joe"><span>Volta</span><strong>Joe</strong></div>
-        <h2 id="form-title">
-          {done ? (
-            <>Cadastro <span>realizado.</span></>
-          ) : (
-            <>Participe desse <span>novo começo!</span></>
-          )}
-        </h2>
-      </div>
-
-      {done ? (
-        <p className="success-intro">Obrigado por participar desse novo começo.</p>
-      ) : (
-        <p className="form-intro">Deixe seus dados e receba todas as novidades do nosso movimento.</p>
-      )}
-
-      {done ? (
-        <div className="success" role="status" aria-live="polite">
-          <div aria-hidden="true" style={{ width: 68, height: 68, marginBottom: 6 }}>
-            <svg viewBox="0 0 52 52" width="68" height="68" fill="none">
-              <circle cx="26" cy="26" r="24" stroke="#0a9c43" strokeWidth="3" strokeDasharray="151" strokeDashoffset="151">
-                <animate attributeName="stroke-dashoffset" from="151" to="0" dur="0.45s" fill="freeze" />
-              </circle>
-              <path d="M15 27l7 7 15-16" stroke="#0a9c43" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="40" strokeDashoffset="40">
-                <animate attributeName="stroke-dashoffset" from="40" to="0" dur="0.3s" begin="0.35s" fill="freeze" />
-              </path>
-            </svg>
+    <div className="form-stack">
+      <section className={`form-card ${done ? 'form-card-success' : ''}`} aria-labelledby="form-title">
+        <div className="form-heading">
+          <CampaignLogo compact />
+          <div>
+            <h2 id="form-title">{done ? 'Cadastro realizado.' : <>Entre para<br />a campanha do Joe.</>}</h2>
+            {!done && <p>Cadastre-se para receber agenda, novidades e convites para participar das próximas ações.</p>}
           </div>
-          {WHATSAPP_URL && (
-            <a className="whatsapp-button success-whatsapp-button" href={WHATSAPP_URL} target="_blank" rel="noreferrer">
-              <WhatsAppIcon /> Entrar na comunidade do WhatsApp
-            </a>
-          )}
         </div>
-      ) : (
-        <form onSubmit={submit} className="signup-form">
-          <label>
-            <span>Nome</span>
-            <input type="text" name="name" autoComplete="name" placeholder="Digite seu nome completo" required />
-          </label>
-          <label>
-            <span>Telefone</span>
-            <input
-              type="tel"
-              name="phone"
-              autoComplete="tel"
-              inputMode="numeric"
-              placeholder="(00) 00000-0000"
-              value={phone}
-              onChange={handlePhoneChange}
-              maxLength={15}
-              required
-            />
-          </label>
-          <label className="consent-row">
-            <input type="checkbox" name="consent" required />
-            <span>
-              Autorizo o uso dos meus dados para contato sobre o movimento e outras comunicações relacionadas, nos
-              termos da LGPD. Li e aceito o <Link href="/termos">termo de aceite</Link>.
-            </span>
-          </label>
-          {error && <p className="form-error" role="alert" aria-live="assertive">{error}</p>}
-          <button className="submit-button" type="submit" disabled={sending}>
-            <span className="send-icon" aria-hidden="true">➤</span>
-            {sending ? 'Enviando...' : 'Quero me inscrever'}
-          </button>
-        </form>
-      )}
 
-      {!done && (
-        <a
-          className={`whatsapp-button ${WHATSAPP_URL ? '' : 'is-disabled'}`}
-          href={WHATSAPP_URL || undefined}
-          target={WHATSAPP_URL ? '_blank' : undefined}
-          rel={WHATSAPP_URL ? 'noreferrer' : undefined}
-          aria-disabled={!WHATSAPP_URL}
-          onClick={(event) => {
-            if (!WHATSAPP_URL) event.preventDefault();
-          }}
-        >
-          <WhatsAppIcon /> Quero entrar na comunidade do WhatsApp
-        </a>
-      )}
+        {done ? (
+          <div className="success" role="status" aria-live="polite">
+            <div className="success-check" aria-hidden="true">✓</div>
+            <p>Obrigado por participar. Agora você já faz parte dessa caminhada.</p>
+            <a className="success-whatsapp" href={WHATSAPP_URL} target="_blank" rel="noreferrer"><WhatsAppIcon /> Entrar na comunidade do WhatsApp</a>
+          </div>
+        ) : (
+          <form onSubmit={submit} className="signup-form">
+            <label className="field-row">
+              <span className="field-icon" aria-hidden="true">○</span>
+              <input type="text" name="name" autoComplete="name" placeholder="Nome completo" required />
+            </label>
+            <label className="field-row">
+              <span className="field-icon phone-mark" aria-hidden="true">⌕</span>
+              <input type="tel" name="phone" autoComplete="tel" inputMode="numeric" placeholder="(00) 00000-0000" value={phone} onChange={handlePhoneChange} maxLength={15} required />
+            </label>
+            <label className="consent-row">
+              <input type="checkbox" name="consent" required />
+              <span>Autorizo o contato e o tratamento dos dados conforme os termos da campanha e a LGPD. Li e aceito o <Link href="/termos">termo de aceite</Link>.</span>
+            </label>
+            {error && <p className="form-error" role="alert" aria-live="assertive">{error}</p>}
+            <button className="submit-button" type="submit" disabled={sending}>{sending ? 'Enviando...' : 'Cadastrar e participar'}</button>
+          </form>
+        )}
 
-      <p className="privacy-note">🔒 Seus dados estão protegidos. Não compartilhamos suas informações.</p>
-    </section>
+        {!done && <a className="inline-whatsapp" href={WHATSAPP_URL} target="_blank" rel="noreferrer"><span>◉</span> ou entrar direto na comunidade do WhatsApp →</a>}
+        <p className="privacy-note">Seus dados ficam protegidos e não são compartilhados.</p>
+      </section>
+      <SocialCards />
+    </div>
+  );
+}
+
+function Hero() {
+  return (
+    <div className="hero-copy">
+      <CampaignLogo />
+      <h1>Uma<br />campanha<br /><span>próxima</span><br />de você.</h1>
+      <p>Chegou a hora de caminharmos juntos. Acompanhe, participe e ajude a construir uma Brasília mais sustentável e humana.</p>
+      <a className="hero-cta" href="#cadastro">Quero participar</a>
+    </div>
   );
 }
 
@@ -233,34 +174,22 @@ export default function CampaignLanding() {
   return (
     <main className="campaign-page">
       <section className="desktop-layout">
-        <div className="desktop-left">
-          <div className="brand-wordmark">Joe<br />Valle</div>
-          <div className="portrait-wrap">
-            <img src={JOE_IMAGE_URL} alt="Joe Valle" className="portrait-image" />
-          </div>
-          <div className="desktop-copy"><CampaignCopy /></div>
+        <div className="desktop-hero">
+          <Hero />
+          <div className="portrait-stage"><img src={JOE_IMAGE_URL} alt="Joe Valle" className="portrait-image" /></div>
         </div>
-        <SignupForm />
+        <div id="cadastro" className="desktop-form-area"><SignupForm /></div>
+        <span className="campaign-year">CAMPANHA 2026</span>
         <FalaJoeWidget />
       </section>
 
       <section className="mobile-layout">
         <div className="mobile-hero">
-          <div className="mobile-portrait">
-            <img src={JOE_IMAGE_URL} alt="Joe Valle" className="portrait-image" />
-          </div>
-          <h1 className="mobile-title">
-            <span>Chegou a hora</span>
-            <strong>de voltarmos</strong>
-            <strong>a caminhar</strong>
-            <em>juntos.</em>
-          </h1>
+          <div className="mobile-hero-copy"><CampaignLogo /><h1>Uma<br />campanha<br /><span>próxima</span><br />de você.</h1><p>Chegou a hora de caminharmos juntos. Acompanhe, participe e ajude a construir uma Brasília mais sustentável e humana.</p></div>
+          <div className="mobile-portrait"><img src={JOE_IMAGE_URL} alt="Joe Valle" className="portrait-image" /></div>
         </div>
-        <SignupForm />
+        <div id="cadastro-mobile"><SignupForm /></div>
         <FalaJoeWidget embedded />
-        <div className="mobile-socials" aria-label="Redes sociais do Joe Valle">
-          <SocialLinks />
-        </div>
       </section>
     </main>
   );
