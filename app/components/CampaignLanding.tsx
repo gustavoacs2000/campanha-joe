@@ -7,7 +7,7 @@ import FalaJoeWidget from './FalaJoeWidget';
 const INSTAGRAM_URL = 'https://www.instagram.com/joevalleoficial/';
 const TIKTOK_URL = 'https://www.tiktok.com/@joe.valle.malunga?_r=1&_t=ZS-98rMjdKcK5S';
 const WHATSAPP_URL = 'https://chat.whatsapp.com/GBMLOZT2jN612wTeX3oZL9?s=qt&p=i&ilr=4';
-const JOE_IMAGE_URL = 'https://drive.google.com/uc?export=view&id=1lUD8WeWWFeUK3eyd6iXWh7N9xcKBQ0q1';
+const JOE_IMAGE_URL = '/joe-campanha-2026.webp';
 
 function formatPhone(value: string) {
   const digits = value.replace(/\D/g, '').slice(0, 11);
